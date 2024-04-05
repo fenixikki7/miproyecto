@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Juego de Palabras</title>
+<meta name="description" content="¿Aburrido? adivina cual es la palabra que esta escrita desordenada">
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f0f0f0;
+  }
+  #container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  #word-display {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  input[type="text"] {
+    padding: 10px;
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+<div id="container">
+  <h1>Adivina la Palabra</h1>
+  <p>Escribe la palabra basada en la pista:</p>
+  <div id="word-display">-</div>
+  <input type="text" id="word-input" placeholder="Tu respuesta aquí">
+  <button id="check-button">Comprobar</button>
+</div>
+
+<script>
+const words = ["computadora", "telefono", "perro", "gato", "casa", "arbol", "libro", "mesa", "silla", "agua"];
+const hints = ["Dispositivo para realizar cálculos y procesos de información.", 
+               "Dispositivo de comunicación inalámbrica.", 
+               "Mamífero doméstico comúnmente utilizado como mascota.", 
+               "Animal felino doméstico.", 
+               "Edificación destinada a ser habitada por personas.", 
+               "Planta de gran tamaño con tronco leñoso y ramas.", 
+               "Conjunto de hojas impresas y encuadernadas.", 
+               "Mueble con una superficie plana sostenida por patas.", 
+               "Asiento con respaldo y generalmente con cuatro patas.", 
+               "Sustancia incolora, insípida e inodora, que forma los ríos, mares y océanos."];
+let currentWordIndex = 0;
+let attemptsLeft = 3;
+let correctAnswers = 0; // Variable para almacenar los aciertos
+const wordDisplay = document.getElementById('word-display');
+const wordInput = document.getElementById('word-input');
+const checkButton = document.getElementById('check-button');
+
+function displayWordHint() {
+  wordDisplay.textContent = hints[currentWordIndex];
+}
+
+function checkAnswer() {
+  const userAnswer = wordInput.value.toLowerCase();
+  const correctAnswer = words[currentWordIndex];
+
+  if (userAnswer === correctAnswer) {
+    showMessage('¡Correcto! Pasaste al siguiente nivel.');
+    correctAnswers++; // Incrementar los aciertos si la respuesta es correcta
+    nextWord();
+  } else {
+    attemptsLeft--;
+    if (attemptsLeft === 0) {
+      showMessage(`¡Incorrecto! La respuesta correcta era "${correctAnswer}".`);
+      nextWord();
+    } else {
+      showMessage(`¡Incorrecto! Te quedan ${attemptsLeft} intentos.`);
+    }
+  }
+}
+
+function showMessage(msg) {
+  alert(msg);
+}
+
+function nextWord() {
+  currentWordIndex++;
+  attemptsLeft = 3;
+  if (currentWordIndex < words.length) {
+    displayWordHint();
+  } else {
+    // Mostrar el número de aciertos al finalizar el juego
+    showMessage(`¡Felicidades! Has adivinado todas las palabras. Total de aciertos: ${correctAnswers}`);
+    resetGame();
+  }
+}
+
+function resetGame() {
+  currentWordIndex = 0;
+  attemptsLeft = 3;
+  correctAnswers = 0; // Reiniciar los aciertos
+  displayWordHint();
+}
+
+checkButton.addEventListener('click', checkAnswer);
+
+displayWordHint();
+</script>
+</body>
+</html>
